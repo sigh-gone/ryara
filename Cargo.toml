@@ -2,6 +2,11 @@
 name = "ryara"
 version = "0.1.0"
 edition = "2021"
+description = "library for using yara rules"
+license = "MIT"
+readme = "README.md"
+documentation = "https://github.com/sigh-gone/ryara"
+homepage = "https://crates.io"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
