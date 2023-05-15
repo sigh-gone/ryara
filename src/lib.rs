@@ -1,3 +1,5 @@
+use std::{fs, io};
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -7,18 +9,28 @@ mod tests {
     use std::time::{Duration, Instant};
 
     #[test]
-    fn it_works() {
-        let file = File::open("hello.txt").expect("Cannot read file.");
-        //let bytes = file.bytes();
-        let mut buf = BufReader::new(file);
+    pub fn new_try() {
+        let file_path = "./hello.txt";
+        let pattern: &[u8] = &[104, 101, 108];
 
-        for byte in buf.bytes() {
-            if byte.unwrap() == 101 {
-                println!("true");
-            }
+        match search_pattern_in_file(file_path, pattern) {
+            Ok(Some(position)) => println!("Pattern found at position: {}", position),
+            Ok(None) => println!("Pattern not found."),
+            Err(error) => eprintln!("Error: {}", error),
         }
-
-        //bytes.find("predicate")
         assert!(false);
     }
+}
+fn search_pattern_in_file(file_path: &str, pattern: &[u8]) -> io::Result<Option<usize>> {
+    let bytes = fs::read(file_path)?;
+    let pattern_len = pattern.len();
+    let bytes_len = bytes.len();
+
+    for i in 0..=(bytes_len - pattern_len) {
+        if bytes[i..i + pattern_len] == *pattern {
+            return Ok(Some(i));
+        }
+    }
+
+    Ok(None)
 }
