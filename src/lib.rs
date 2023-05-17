@@ -1,4 +1,4 @@
-use std::{fs::File, io::Read};
+use std::{fs::File, io::Read, iter::Peekable, str::Chars};
 
 use hex::ToHex;
 
@@ -15,6 +15,22 @@ mod tests {
         let pattern = hex::decode(smoke2).unwrap();
 
         assert!(search_pattern(&data, &pattern).is_some());
+    }
+
+    #[test]
+    pub fn try_get_tokens() {
+        /*let numbers = vec![1, 2, 3, 4, 5];
+        let mut iter = numbers.iter().peekable();
+
+        while let Some(&num) = iter.peek() {
+            println!("Peeked: {}", num);
+            iter.next();
+        }*/
+        let smokey = String::from("    hello  white  space");
+        let mut chars = smokey.chars().peekable();
+        println!("{:?}", chars);
+        let smoke = consume_while(chars, char::is_whitespace);
+        println!("{:?}", smoke);
     }
 }
 
@@ -41,4 +57,22 @@ fn search_pattern(data: &[u8], pattern: &[u8]) -> Option<usize> {
     }
 
     None
+}
+
+fn get_tokens() {
+    let r = r"
+        $try { 4a 4c 5f 60 9a }
+    ";
+}
+
+fn consume_while<F>(mut stuff: Peekable<Chars>, condition: F) -> (String, Peekable<Chars>)
+where
+    F: Fn(char) -> bool,
+{
+    let mut result = String::new();
+    while stuff.peek().map_or(false, |c| condition(*c)) {
+        result.push(stuff.next().unwrap());
+    }
+
+    (result, stuff)
 }
